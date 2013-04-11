@@ -2,8 +2,7 @@
 #define INTERPOSE_DL_HPP
 
 #include <dlfcn.h>
-#include "./interpose.hpp"
-#include "../interpose.hpp"
+#include "interpose.hpp"
 
 struct interpose_dl_root : public InterposeRoot {
 public:

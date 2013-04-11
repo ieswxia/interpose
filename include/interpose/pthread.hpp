@@ -3,8 +3,7 @@
 
 #include <signal.h>
 #include <pthread.h>
-#include "./interpose.hpp"
-#include "../interpose.hpp"
+#include "interpose.hpp"
 
 struct interpose_pthread_root : public InterposeRoot {
 public:
