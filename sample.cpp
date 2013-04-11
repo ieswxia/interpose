@@ -6,6 +6,9 @@
 #include <interpose/proc.hpp>
 #include <interpose/signal.hpp>
 #include <interpose/pthread.hpp>
+#include <interpose/pthread_mutex.hpp>
+#include <interpose/pthread_cond.hpp>
+#include <interpose/pthread_rwlock.hpp>
 
 struct observer : public InterposeRoot {
 	void* dlopen(const char* filename, int flag) {
