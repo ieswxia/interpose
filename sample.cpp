@@ -2,6 +2,9 @@
 
 #include <interpose.hpp>
 #include <interpose/dl.hpp>
+#include <interpose/heap.hpp>
+#include <interpose/proc.hpp>
+#include <interpose/signal.hpp>
 #include <interpose/pthread.hpp>
 
 struct observer : public InterposeRoot {
@@ -10,8 +13,14 @@ struct observer : public InterposeRoot {
 		return InterposeRoot::dlopen(filename, flag);
 	}
 	
-	pthread_t pthread_self() {
-		return InterposeRoot::pthread_self();
+	int fork() {
+		DEBUG(0, "caught fork");
+		return InterposeRoot::fork();
+	}
+	
+	int execve(const char* filename, char* const argv[], char* const envp[]) {
+		DEBUG(0, "caught execve");
+		return InterposeRoot::execve(filename, argv, envp);
 	}
 	
 	int pthread_create(pthread_t* thread, const pthread_attr_t* attr, void* (*fn)(void*), void* arg) {
