@@ -22,3 +22,5 @@ Once the interposition code has been written, you must declare *exactly one* ins
 	Interpose<dl_logger> interposer; // Only one allowed!
 
 This creates all the necessary interposition functions, and invokes all intercepted methods on the ```interposer``` object.
+
+If you compile this code to ```dl_logger.dylib``` and run a program with the environment variable ```DYLD_INSERT_LIBRARIES=dl_logger.dylib```, this code will print a message every time a new dynamic library is opened.  The included Makefile includes several targets for testing against common applications.  Run ```make test-chrome``` to preload the sample library against Google Chrome.
