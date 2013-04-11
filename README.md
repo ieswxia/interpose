@@ -66,6 +66,7 @@ Include ```interpose/pthread.hpp``` to enable interposition on these functions:
  - ```void pthread_exit(void* retval)```
 
 ### pthread_cond
+Include ```interpose/pthread_cond.hpp``` to enable interposition on these functions:
 
  - ```int pthread_cond_init(pthread_cond_t* cond, const pthread_condattr_t* attr)```
  - ```int pthread_cond_wait(pthread_cond_t* cond, pthread_mutex_t* mutex)```
@@ -75,6 +76,7 @@ Include ```interpose/pthread.hpp``` to enable interposition on these functions:
  - ```int pthread_cond_destroy(pthread_cond_t* cond)```
 
 ### pthread_mutex
+Include ```interpose/pthread_mutex.hpp``` to enable interposition on these functions:
 
  - ```int pthread_mutex_init(pthread_mutex_t* mutex, const pthread_mutexattr_t* attr)```
  - ```int pthread_mutex_lock(pthread_mutex_t* mutex)```
@@ -83,6 +85,7 @@ Include ```interpose/pthread.hpp``` to enable interposition on these functions:
  - ```int pthread_mutex_destroy(pthread_mutex_t* mutex)```
 
 ### pthread_rwlock
+Include ```interpose/pthread_rwlock.hpp``` to enable interposition on these functions:
 
  - ```int pthread_rwlock_init(pthread_rwlock_t* rwlock, const pthread_rwlockattr_t* attr)```
  - ```int pthread_rwlock_rdlock(pthread_rwlock_t* rwlock)```
