@@ -2,7 +2,6 @@
 #define INTERPOSE_TOOLS_SPOOL_HPP
 
 #include "../pthread.hpp"
-#include "../pthread_mutex.hpp"
 #include "../proc.hpp"
 
 #include <vector>
@@ -74,7 +73,7 @@ public:
 		pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
 		
 		// Initialize the lock
-		InterposeRoot::pthread_mutex_init(&_mutex, &attr);
+		pthread_mutex_init(&_mutex, &attr);
 		
 		// Destroy the mutex attr
 		pthread_mutexattr_destroy(&attr);
@@ -85,7 +84,7 @@ public:
 	
 	~Spool() {
 		// Destroy the lock
-		InterposeRoot::pthread_mutex_destroy(&_mutex);
+		pthread_mutex_destroy(&_mutex);
 	}
 	
 	void lock() {
