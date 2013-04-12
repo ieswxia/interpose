@@ -26,7 +26,7 @@ This creates all the necessary interposition functions, and invokes all intercep
 If you compile this code to ```dl_logger.dylib``` and run a program with the environment variable ```DYLD_INSERT_LIBRARIES=dl_logger.dylib```, this code will print a message every time a new dynamic library is opened.  The included Makefile includes several targets for testing against common applications.  Run ```make test-chrome``` to preload the sample library against Google Chrome in a new profile (assuming the default OSX install directory).
 
 ## Tools
-Interpose will include layers for implementing simple interposition-related tasks.  Right now, the only layer is ```Spool``` in ```interpose/tools/spool.hpp```.  The Spool layer intercepts thread creation and termination to keep a running list of all active threads in the application.  You can get the current count of threads with ```Spool::threadCount()```, and get a specific thread with ```Spool::getThread(size_t index)```.  The example code in ```simple.cpp``` includes the spool layer and prints a thread count on every ```dlopen``` call.
+Interpose will include layers for implementing simple interposition-related tasks.  Right now, the only layer is ```Spool``` in ```interpose/tools/spool.hpp```.  The Spool layer intercepts thread creation and termination to keep a running list of all active threads in the application.  You can get the current count of threads with ```Spool::threadCount()```, and get a specific thread with ```Spool::getThread(size_t index)```.  The example code in ```sample.cpp``` includes the spool layer and prints a thread count on every ```dlopen``` call.
 
 ## Supported Functions
 ### dl
