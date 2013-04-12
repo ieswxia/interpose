@@ -6,7 +6,7 @@ all: sample.dylib
 clean:
 	rm -f sample.dylib
 
-sample.dylib: sample.cpp $(wildcard include/*.hpp) $(wildcard include/interpose/*.hpp)
+sample.dylib: sample.cpp $(wildcard include/*.hpp) $(wildcard include/interpose/*.hpp) $(wildcard include/interpose/tools/*.hpp)
 	$(CXXLIB) -Iinclude -o sample.dylib sample.cpp -lpthread
 
 test-calc: sample.dylib
