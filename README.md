@@ -1,8 +1,8 @@
 # Interpose
-Interpose is a set of C++ header files for interposing on POSIX functions from a preloaded dynamic library.  The library allows you to intercept various subsets of POSIX functionality.  The list of supported functions is at the end of this document.
+Interpose makes it easy to intercept POSIX calls in OSX applications.  Interpose consists entirely of C++ header files.  The list of supported functions is at the end of this document.
 
 ## Usage
-The file ```sample.cpp``` shows how to interpose on several functions.  The example just prints a debug message and forwards the call along to the real POSIX function.
+The file ```sample.cpp``` shows how to interpose on several functions.  The example just prints a debug message for a few functions, then forwards the call along to the real POSIX function.
 
 Every library that uses Interpose must include ```interpose.hpp```.  If you need to intercept pthread functions, include ```interpose/pthread.hpp```.  To intercept the dynamic linker functions, include ```interpose/dl.hpp```.
 
@@ -23,7 +23,7 @@ Once the interposition code has been written, you must declare *exactly one* ins
 
 This creates all the necessary interposition functions, and invokes all intercepted methods on the ```interposer``` object.
 
-If you compile this code to ```dl_logger.dylib``` and run a program with the environment variable ```DYLD_INSERT_LIBRARIES=dl_logger.dylib```, this code will print a message every time a new dynamic library is opened.  The included Makefile includes several targets for testing against common applications.  Run ```make test-chrome``` to preload the sample library against Google Chrome.
+If you compile this code to ```dl_logger.dylib``` and run a program with the environment variable ```DYLD_INSERT_LIBRARIES=dl_logger.dylib```, this code will print a message every time a new dynamic library is opened.  The included Makefile includes several targets for testing against common applications.  Run ```make test-chrome``` to preload the sample library against Google Chrome in a new profile (assuming the default OSX install directory).
 
 ## Tools
 Interpose will include layers for implementing simple interposition-related tasks.  Right now, the only layer is ```Spool``` in ```interpose/tools/spool.hpp```.  The Spool layer intercepts thread creation and termination to keep a running list of all active threads in the application.  You can get the current count of threads with ```Spool::threadCount()```, and get a specific thread with ```Spool::getThread(size_t index)```.  The example code in ```simple.cpp``` includes the spool layer and prints a thread count on every ```dlopen``` call.
