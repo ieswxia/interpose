@@ -1,32 +1,46 @@
 # Interpose
-Interpose makes it easy to intercept POSIX calls in OSX applications.  Interpose consists entirely of C++ header files.  The list of supported functions is at the end of this document.
+Interpose makes it easy to intercept POSIX calls in OSX applications (Linux support coming soon).  Interpose consists entirely of C++ header files.  The list of supported functions is at the end of this document.
 
 ## Usage
 The file ```sample.cpp``` shows how to interpose on several functions.  The example just prints a debug message for a few functions, then forwards the call along to the real POSIX function.
 
-Every library that uses Interpose must include ```interpose.hpp```.  If you need to intercept pthread functions, include ```interpose/pthread.hpp```.  To intercept the dynamic linker functions, include ```interpose/dl.hpp```.
+POSIX functions are broken down into subsets, each with its own header file.  For example, process creation and termination functions can be intercepted by including ```interpose/proc.hpp```.  To interpose on pthread mutex operations, include ```interpose/pthread_mutex.hpp```.  The end of this document lists all supported functions.
 
-After including the required headers, you need to create a class or struct with the functions you want to intercept.  This struct should inherit from InterposeRoot, so any functions not trapped will be forwarded on to the POSIX implementation.  The following struct intercepts calls to ```dlopen```, reports the opened library, and forward the call on to POSIX:
+After including the required headers, you need to create a class or struct with the functions you want to intercept.  This struct should inherit from ```Root``` in the ```interpose``` namespace, so any functions not trapped will be forwarded on to the POSIX implementation.  The following struct can intercept calls to ```dlopen```, reports the opened library, and forwards the call on to POSIX:
 
-	struct dl_logger : public InterposeBase {
+    using namespace interpose;
+
+	struct DLLogger : public Root {
 		void* dlopen(const char* filename, int flag) {
 			fprintf(stderr, "Opening %s\n", filename);
 			
 			// Pass the call on to POSIX
-			return InterposeBase::dlopen(filename, flag));
+			return Root::dlopen(filename, flag));
 		}
 	};
 
-Once the interposition code has been written, you must declare *exactly one* instance of the interposition code:
+Once the interposition struct has been written, you need to create an instance of the interposition class:
 
-	Interpose<dl_logger> interposer; // Only one allowed!
+	dl<DLLogger> theDLLogger;
 
-This creates all the necessary interposition functions, and invokes all intercepted methods on the ```interposer``` object.
+You can interpose on multiple subsets by nesting the interposition templates:
 
-If you compile this code to ```dl_logger.dylib``` and run a program with the environment variable ```DYLD_INSERT_LIBRARIES=dl_logger.dylib```, this code will print a message every time a new dynamic library is opened.  The included Makefile includes several targets for testing against common applications.  Run ```make test-chrome``` to preload the sample library against Google Chrome in a new profile (assuming the default OSX install directory).
+    dl<proc<Logger> > theLogger;	// Don't forget the space between angle brackets for compatibility
+
+You can also interpose on different subsets with separate objects:
+
+    dl<DLLogger> theDLLogger;
+    proc<ProcLogger> theProcLogger;
+
+*You may only define one object that interposes on a given subset*.  It is not possible for two objects to interpose on the same function.  It doesn't matter if they are of the same type.  If you try to interpose on a subset multiple types, the interpose library will abort execution.  The following code *is an example of WHAT NOT TO DO*:
+
+    dl<DLLogger> theDLLogger;
+    proc<dl<POSIXLogger> > thePOSIXLogger;
+
+Run ```make``` to compile the included interposition code in ```sample.cpp``` to a dynamic library.  The makefile also includes several targets for testing the sample interposition code against common applications.  Run ```make test-chrome``` to preload the sample library against Google Chrome in a new profile.  This target will not work if you installed Chrome somewhere other than the Applications directory.
 
 ## Tools
-Interpose will include layers for implementing simple interposition-related tasks.  Right now, the only layer is ```Spool``` in ```interpose/tools/spool.hpp```.  The Spool layer intercepts thread creation and termination to keep a running list of all active threads in the application.  You can get the current count of threads with ```Spool::threadCount()```, and get a specific thread with ```Spool::getThread(size_t index)```.  The example code in ```sample.cpp``` includes the spool layer and prints a thread count on every ```dlopen``` call.
+TBD
 
 ## Supported Functions
 ### dl
@@ -99,7 +113,7 @@ Include ```interpose/pthread_rwlock.hpp``` to enable interposition on these func
  - ```int pthread_rwlock_destroy(pthread_rwlock_t* rwlock)```
 
 ### signals
-Include ```interpose/signal.hpp``` to enable interposition on these functions:
+Include ```interpose/signals.hpp``` to enable interposition on these functions:
 
  - ```sighandler_t signal(int signum, sighandler_t handler)```
  - ```int sigaction(int signum, const struct sigaction* act, struct sigaction* oldact)```
