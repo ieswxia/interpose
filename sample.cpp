@@ -3,7 +3,7 @@
 #include <interpose/dl.hpp>
 #include <interpose/heap.hpp>
 #include <interpose/proc.hpp>
-#include <interpose/signal.hpp>
+#include <interpose/signals.hpp>
 #include <interpose/pthread.hpp>
 #include <interpose/pthread_mutex.hpp>
 #include <interpose/pthread_cond.hpp>
