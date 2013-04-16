@@ -1,12 +1,14 @@
 CXX = clang++ -arch i386 -arch x86_64
 CXXLIB = $(CXX) -shared -fPIC -compatibility_version 1 -current_version 1 -Wl,-flat_namespace,-undefined,suppress -dynamiclib
 
+INCLUDES = $(wildcard include/*.hpp) $(wildcard include/*/*.hpp) $(wildcard include/*/*/*.hpp)
+
 all: sample.dylib
 
 clean:
 	rm -f sample.dylib
 
-sample.dylib: sample.cpp $(wildcard include/*.hpp) $(wildcard include/interpose/*.hpp) $(wildcard include/interpose/tools/*.hpp)
+sample.dylib: sample.cpp $(INCLUDES)
 	$(CXXLIB) -Iinclude -o sample.dylib sample.cpp -lpthread
 
 test-calc: sample.dylib
